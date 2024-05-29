@@ -1,6 +1,7 @@
 package producer
 
 import (
+	"crypto/tls"
 	"log"
 	"sync/atomic"
 	"time"
@@ -20,7 +21,7 @@ type Producer struct {
 }
 
 // NewProducer creates a new Producer with the given Kafka brokers.
-func NewProducer(brokers []string, username, password string) (*Producer, error) {
+func NewProducer(brokers []string, username, password string, tlsConfig *tls.Config) (*Producer, error) {
 	config := sarama.NewConfig()
 	config.Producer.Return.Successes = false
 	config.Producer.Return.Errors = true
@@ -28,10 +29,14 @@ func NewProducer(brokers []string, username, password string) (*Producer, error)
 		config.Net.SASL.User = username
 		config.Net.SASL.Password = password
 	}
-	log.Println("Girish:", username)
+	if tlsConfig != nil {
+		config.Net.TLS.Enable = true
+		config.Net.TLS.Config = tlsConfig
+	}
 
 	producer, err := sarama.NewAsyncProducer(brokers, config)
 	if err != nil {
+		log.Println("NewAsyncProducer", err)
 		return nil, err
 	}
 

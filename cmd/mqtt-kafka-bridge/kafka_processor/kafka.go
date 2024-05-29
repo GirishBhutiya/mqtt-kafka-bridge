@@ -1,6 +1,7 @@
 package kafka_processor
 
 import (
+	"log"
 	"strings"
 
 	l "log"
@@ -24,9 +25,10 @@ type client struct {
 
 var cl *client
 
-func Init(kafkaToMqttChan chan shared.KafkaMessage, sChan chan bool, config config.ConfigVars) {
+func Init(kafkaToMqttChan chan shared.KafkaMessage, sChan chan bool, conf config.ConfigVars) {
 
 	l.Println("in kafka.Init()")
+	tl := config.CreateTlsConfiguration(conf.KafkaCertFilePath, conf.KafkaKeyFilePath, "", true)
 	/* KafkaBootstrapServer, err := env.GetAsString("KAFKA_BOOTSTRAP_SERVER", true, "")
 	if err != nil {
 		zap.S().Fatal(err)
@@ -48,12 +50,13 @@ func Init(kafkaToMqttChan chan shared.KafkaMessage, sChan chan bool, config conf
 	if err != nil {
 		zap.S().Fatalf("Error compiling regex: %v", err)
 	} */
-
-	pr, err := producer.NewProducer(config.KafkaBootstrapServer, config.KafkaUsername, config.KafkaPassword)
+	//log.Println("tl", tl)
+	log.Println("server", conf.KafkaBootstrapServer)
+	pr, err := producer.NewProducer(conf.KafkaBootstrapServer, conf.KafkaUsername, conf.KafkaPassword, tl)
 	if err != nil {
 		zap.S().Fatalf("Error creating kafka producer: %v", err)
 	}
-	consumr, err := redpanda.NewConsumer(config.KafkaBootstrapServer, config.KafkaListenTopic, "mqtt-kafka-bridge", config.ClientId, config.KafkaUsername, config.KafkaPassword)
+	consumr, err := redpanda.NewConsumer(conf.KafkaBootstrapServer, conf.KafkaListenTopic, conf.KafkaClientId, conf.KafkaClientId, conf.KafkaUsername, conf.KafkaPassword, tl)
 
 	cl = &client{
 		producer: pr,

@@ -3,6 +3,7 @@ package redpanda
 import (
 	"context"
 	"crypto/sha256"
+	"crypto/tls"
 	"encoding/hex"
 	"errors"
 	"regexp"
@@ -72,7 +73,7 @@ func genIID(instanceId string) string {
 }
 
 // NewConsumer initializes and returns a new Consumer instance.
-func NewConsumer(kafkaBrokers, subscribeRegexes []string, groupId, instanceId, username, password string) (*Consumer, error) {
+func NewConsumer(kafkaBrokers, subscribeRegexes []string, groupId, instanceId, username, password string, tlsConfig *tls.Config) (*Consumer, error) {
 	zap.S().Infof("Connecting to brokers: %v", kafkaBrokers)
 	zap.S().Infof("Creating new consumer with Group ID: %s, Instance ID: %s", groupId, instanceId)
 	zap.S().Infof("Subscribing to topics: %v", subscribeRegexes)
@@ -89,6 +90,10 @@ func NewConsumer(kafkaBrokers, subscribeRegexes []string, groupId, instanceId, u
 	if username != "" {
 		config.Net.SASL.User = username
 		config.Net.SASL.Password = password
+	}
+	if tlsConfig != nil {
+		config.Net.TLS.Enable = true
+		config.Net.TLS.Config = tlsConfig
 	}
 
 	c := Consumer{}

@@ -1,6 +1,7 @@
 package producer
 
 import (
+	"crypto/tls"
 	"encoding/json"
 	"math/rand"
 	"strconv"
@@ -17,9 +18,9 @@ func TestConnectAndProduce(t *testing.T) {
 		"10.99.112.34:31092",
 		"10.99.112.35:31092",
 	}
-
+	tl := tls.Config{}
 	t.Logf("Connecting to brokers: %v", brokers)
-	testProducer, err := NewProducer(brokers, "", "")
+	testProducer, err := NewProducer(brokers, "", "", &tl)
 	if err != nil {
 		t.Fatal(err)
 	}
