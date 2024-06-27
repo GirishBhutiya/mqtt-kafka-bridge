@@ -32,17 +32,17 @@ func main() {
 	os.Setenv("MQTT_USERNAME", "")
 	os.Setenv("MQTT_PASSWORD", "") */
 
-	config, err := config.LoadConfigFromEnvironment()
-	if err != nil {
+	config := config.LoadConfigFromEnvironment()
+	/* if err != nil {
 		panic(err)
-	}
+	} */
 
 	//var err error
 	// Initialize zap logging
 	logLevel, _ := env.GetAsString("LOGGING_LEVEL", false, "PRODUCTION") //nolint:errcheck
 	log := logger.New(logLevel)
 	defer func(logger *zap.SugaredLogger) {
-		err = logger.Sync()
+		err := logger.Sync()
 		if err != nil {
 			panic(err)
 		}

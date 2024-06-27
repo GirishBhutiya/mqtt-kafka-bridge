@@ -29,31 +29,6 @@ func Init(mqttToKafkaChan chan shared.KafkaMessage, shutdownChan chan bool, conf
 		return
 	}
 	sChan = shutdownChan
-	/* certificateName, err := env.GetAsString("MQTT_CERTIFICATE_NAME", true, "")
-	if err != nil {
-		zap.S().Fatal(err)
-	}
-	mqttBrokerURL, err := env.GetAsString("MQTT_BROKER_URL", true, "")
-	if err != nil {
-		zap.S().Fatal(err)
-	}
-	mqttTopic, err := env.GetAsString("MQTT_TOPIC", true, "")
-	if err != nil {
-		zap.S().Fatal(err)
-	}
-	podName, err := env.GetAsString("MY_POD_NAME", true, "")
-	if err != nil {
-		zap.S().Fatal(err)
-	}
-	username, err := env.GetAsString("MQTT_USERNAME", false, "")
-	if err != nil {
-		zap.S().Error(err)
-	}
-	password, err := env.GetAsString("MQTT_PASSWORD", false, "")
-	if err != nil {
-		zap.S().Error(err)
-	} */
-
 	opts := MQTT.NewClientOptions()
 	opts.AddBroker(config.MQTTBrokerURL)
 	opts.SetUsername(config.MQTTUsername)

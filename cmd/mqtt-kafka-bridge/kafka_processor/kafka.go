@@ -4,8 +4,6 @@ import (
 	"log"
 	"strings"
 
-	l "log"
-
 	"github.com/GirishBhutiya/mqtt-kafka-bridge/cmd/mqtt-kafka-bridge/message"
 	"github.com/GirishBhutiya/mqtt-kafka-bridge/config"
 	"github.com/GirishBhutiya/mqtt-kafka-bridge/internal"
@@ -27,30 +25,9 @@ var cl *client
 
 func Init(kafkaToMqttChan chan shared.KafkaMessage, sChan chan bool, conf config.ConfigVars) {
 
-	l.Println("in kafka.Init()")
+	log.Println("in kafka.Init()")
 	tl := config.CreateTlsConfiguration(conf.KafkaCertFilePath, conf.KafkaKeyFilePath, "", true)
-	/* KafkaBootstrapServer, err := env.GetAsString("KAFKA_BOOTSTRAP_SERVER", true, "")
-	if err != nil {
-		zap.S().Fatal(err)
-	}
-	KafkaTopic, err := env.GetAsString("KAFKA_LISTEN_TOPIC", true, "")
-	if err != nil {
-		zap.S().Fatal(err)
-	}
-	useSsl, err := env.GetAsBool("KAFKA_USE_SSL", false, false)
-	if err != nil {
-		zap.S().Error(err)
-	}
-	clientid, err := env.GetAsString("KAFKA_CLIENT_ID", false, "")
-	if err != nil {
-		zap.S().Error(err)
-	} */
 
-	/* compile, err := regexp.Compile(KafkaTopic)
-	if err != nil {
-		zap.S().Fatalf("Error compiling regex: %v", err)
-	} */
-	//log.Println("tl", tl)
 	log.Println("server", conf.KafkaBootstrapServer)
 	pr, err := producer.NewProducer(conf.KafkaBootstrapServer, conf.KafkaUsername, conf.KafkaPassword, tl)
 	if err != nil {
@@ -62,17 +39,6 @@ func Init(kafkaToMqttChan chan shared.KafkaMessage, sChan chan bool, conf config
 		producer: pr,
 		consumer: consumr,
 	}
-	/* client, err = kafka.NewKafkaClient(&kafka.NewClientOptions{
-		Brokers: []string{
-			KafkaBootstrapServer,
-		},
-		ConsumerGroupId:   "mqtt-kafka-bridge",
-		ListenTopicRegex:  compile,
-		Partitions:        6,
-		ReplicationFactor: 1,
-		EnableTLS:         useSsl,
-		StartOffset:       sarama.OffsetOldest,
-	}) */
 
 	if err != nil {
 		zap.S().Fatalf("Error creating kafka client: %v", err)
@@ -130,8 +96,8 @@ func start(mqttToKafkaChan chan shared.KafkaMessage) {
 		msg.Topic = strings.ReplaceAll(msg.Topic, "/", ".")
 
 		internal.AddSXOrigin(&msg)
-		var err error
-		err = internal.AddSXTrace(&msg)
+		//var err error
+		err := internal.AddSXTrace(&msg)
 		if err != nil {
 			zap.S().Fatalf("Failed to marshal trace")
 			continue

@@ -71,7 +71,7 @@ func CreateTlsConfiguration(certFile, keyFile, caFile string, tlsSkipVerify bool
 	// will be nil by default if nothing is provided
 	return t
 }
-func LoadConfigFromEnvironment() (config ConfigVars, err error) {
+func LoadConfigFromEnvironment() (config ConfigVars) {
 
 	config.KafkaBootstrapServer = strings.Split(os.Getenv("KAFKA_BOOTSTRAP_SERVER"), ",")
 	config.KafkaListenTopic = strings.Split(os.Getenv("KAFKA_LISTEN_TOPIC"), ",")
