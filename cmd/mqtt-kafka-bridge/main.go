@@ -1,6 +1,7 @@
 package main
 
 import (
+	"os"
 	"time"
 
 	"github.com/GirishBhutiya/mqtt-kafka-bridge/cmd/mqtt-kafka-bridge/kafka_processor"
@@ -16,8 +17,8 @@ import (
 
 func main() {
 
-	//os.Setenv("KAFKA_BOOTSTRAP_SERVER", "localhost:9092")
-	/* os.Setenv("KAFKA_BOOTSTRAP_SERVER", "mes-broker0.rcmindustries.com:443")
+	os.Setenv("KAFKA_BOOTSTRAP_SERVER", "localhost:9092")
+	//os.Setenv("KAFKA_BOOTSTRAP_SERVER", "mes-broker0.rcmindustries.com:443")
 	os.Setenv("KAFKA_LISTEN_TOPIC", "benthos")
 	os.Setenv("KAFKA_USE_SSL", "false")
 	os.Setenv("KAFKA_CLIENT_ID", "benthos")
@@ -30,7 +31,7 @@ func main() {
 	os.Setenv("MQTT_TOPIC", "benthos")
 	os.Setenv("MY_POD_NAME", "benthos")
 	os.Setenv("MQTT_USERNAME", "")
-	os.Setenv("MQTT_PASSWORD", "") */
+	os.Setenv("MQTT_PASSWORD", "")
 
 	config := config.LoadConfigFromEnvironment()
 	/* if err != nil {
